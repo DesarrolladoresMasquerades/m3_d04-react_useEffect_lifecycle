@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function Timer() {
+function Timer(props) {
   const [count, setCount] = useState(0);
 
-  // 1. setInterval continuously calls `setCount` that updates the state
-  // 2. Each time the state updates component re-renders
-  // 3. When component re-renders, code runs again and creates a new setInterval timer
-  // 4. This way multiple setIntervals are created causing an increasing
-  //    amount of re-renders until there is too many and component crashes.
+  useEffect(() => {
+    console.log("I am haveing a useEffect her, please be quite!");
 
-  const intervalId = setInterval(() => {
-    console.log("intervalId: ", intervalId);
-    setCount(count + 1);
-  }, 1000);
+    const intervalId = setInterval(
+      () => setCount((currentCount) => currentCount + 1),
+      1 * 1000
+    );
+
+    return () => clearInterval(intervalId); // cleanup runs AFTER useEffect has finished
+  }, []);
+
+  useEffect(() => {
+    console.log("useEffect - on update");
+    document.title = "Timer app count is: " + count;
+  }, [count]);
 
   return (
     <div className="Timer">
